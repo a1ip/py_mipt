@@ -1,0 +1,473 @@
+ <!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="numpy np svd сингулярное разложение" />
+    <meta name="description" content="numpy.linalg.svd() - выполняет сингулярное (SVD) разложение." />
+    <link rel="canonical" href="https://pyprog.pro/linear_algebra_functions/linalg_svd.html"/>
+    <title>linalg.svd | NumPy</title>
+
+    <!-- Bootstrap -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/style2.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/prism.css" data-noprefix />
+    <link rel="shortcut icon" href="../images/favicon.png" type="image/png">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter48843035 = new Ya.Metrika({
+                    id:48843035,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/48843035" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+  </head>
+  <body>
+        <!-- НАВИГАЦИЯ -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar_collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+              <div class="navbar-brand brand_numpy">
+                  <a class = "link_brand" href="https://pyprog.pro/">#PyProg</a><br>
+                  <a class = "link_brand" href="../numpy.html">#NumPy</a>
+              </div>
+            </div>
+
+        <!-- НАВИГАЦИОННОЕ МЕНЮ -->
+            <div class="collapse navbar-collapse" id="navbar_collapse">
+              <ul class="nav navbar-nav">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Справочное руководство<b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="../reference_manual.html">Оглавление</a></li>
+                    <li class="divider"></li>
+                    <li><a href="../array_creation/array_creation_functions.html">1. Создание массивов</a></li>
+                    <li><a href="../array_manipulation/array_manipulation_functions.html">2. Операции над массивами</a>
+                    <li><a href="../mathematical_functions/mathematical_functions.html">3. Математические функции</a></li>
+                    <li><a href="../random_sampling_functions/random_sampling_functions.html">4. Генерация случайных данных</a></li>
+                    <li><a href="../statistics_functions/statistics_function.html">5. Статистика</a></li>
+                    <li><a href="linalg_functions.html">6. Линейная алгебра</a></li>
+                    <li><a href="../io_functions/io_functions.html">7. Ввод и вывод данных</a></li>
+                    <li><a href="../indexing_routines/indexing_routines.html">8. Работа с индексом</a></li>
+                    <li><a href="../sort/sort_func.html">9. Сортировка, поиск, подсчет</a></li>
+                    <li class="divider"></li>
+                    <li><a href="../reference_manual.html">Справочное руководство</a></li>
+                    <li class="divider"></li>
+                    <li><a href="../short_guide.html">Краткое руководство</a></li>
+                  </ul>
+                </li>
+              </ul>
+              <ul class="nav navbar-nav">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Линейная алгебра<b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="linalg_functions.html#linalg_functions_ch0">6. Линейная алгебра</a></li>
+                    <li class="divider"></li>
+                    <li><a href="linalg_functions.html#linalg_functions_ch1">6.1. Произведение векторов и матриц</a></li>
+                     <li><a href="linalg_functions.html#linalg_functions_ch2">6.2. Разложения матриц</a></li>
+                    <li><a href="linalg_functions.html#linalg_functions_ch3">6.3. Нормы и прочие числовые характеристики матриц</a></li>
+                    <li><a href="linalg_functions.html#linalg_functions_ch4">6.4. Собственные значения матриц</a></li>
+                    <li><a href="linalg_functions.html#linalg_functions_ch5">6.5. Системы уравнений и обратные матрицы</a></li>
+                    <li><a href="linalg_functions.html#linalg_functions_ch6">6.6. Исключения</a></li>
+                  </ul>
+                </li>
+                <li>
+                    <a href="linalg_qr.html">
+                        <span class="glyphicon glyphicon-chevron-left glyphicon_navigation"></span>Предыдущая
+                    </a>
+                </li>
+                <li>
+                    <a href="linalg_norm.html">
+                        Следующая<span class="glyphicon glyphicon-chevron-right glyphicon_navigation"></span>
+                    </a>
+                </li>
+              </ul>
+              <!-- se_ya -->
+              <div class="seya">
+              <div class="ya-site-form ya-site-form_inited_no" onclick="return {'action':'https://yandex.ru/search/site/','arrow':false,'bg':'transparent','fontsize':14,'fg':'#000000','language':'ru','logo':'rw','publicname':'Поиск по PyProg.pro','suggest':true,'target':'_self','tld':'ru','type':3,'usebigdictionary':true,'searchid':2344620,'input_fg':'#ffffff','input_bg':'#222222','input_fontStyle':'normal','input_fontWeight':'normal','input_placeholder':'поиск по сайту','input_placeholderColor':'#ffffff','input_borderColor':'#ffffff'}"><form action="https://yandex.ru/search/site/" method="get" target="_self" accept-charset="utf-8"><input type="hidden" name="searchid" value="2344620"/><input type="hidden" name="l10n" value="ru"/><input type="hidden" name="reqenc" value="utf-8"/><input type="search" name="text" value=""/><input type="submit" value="Найти"/></form></div><style type="text/css">.ya-page_js_yes .ya-site-form_inited_no { display: none; }</style><script type="text/javascript">(function(w,d,c){var s=d.createElement('script'),h=d.getElementsByTagName('script')[0],e=d.documentElement;if((' '+e.className+' ').indexOf(' ya-page_js_yes ')===-1){e.className+=' ya-page_js_yes';}s.type='text/javascript';s.async=true;s.charset='utf-8';s.src=(d.location.protocol==='https:'?'https:':'http:')+'//site.yandex.net/v2.0/js/all.js';h.parentNode.insertBefore(s,h);(w[c]||(w[c]=[])).push(function(){Ya.Site.Form.init()})})(window,document,'yandex_site_callbacks');</script>
+              </div>
+              <!-- end se_ya -->
+            </div>
+          </div>
+        </nav>
+
+
+
+    <div class="container">
+      <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+               <!-- Yandex.RTB R-A-413294-13 -->
+                <div id="yandex_rtb_R-A-413294-13"></div>
+                <script type="text/javascript">
+                    (function(w, d, n, s, t) {
+                        w[n] = w[n] || [];
+                        w[n].push(function() {
+                            Ya.Context.AdvManager.render({
+                                blockId: "R-A-413294-13",
+                                renderTo: "yandex_rtb_R-A-413294-13",
+                                async: true
+                            });
+                        });
+                        t = d.getElementsByTagName("script")[0];
+                        s = d.createElement("script");
+                        s.type = "text/javascript";
+                        s.src = "//an.yandex.ru/system/context.js";
+                        s.async = true;
+                        t.parentNode.insertBefore(s, t);
+                    })(this, this.document, "yandexContextAsyncCallbacks");
+                </script>
+          </div>
+      </div>
+      <div class="content">
+          <div class="row">
+           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+               <h1>
+                   numpy.linalg.svd
+               </h1>
+               <div class="panel panel-default">
+                  <div class="panel-heading">
+                     <code class="ref_func">
+                         numpy.linalg.svd(a, full_matrices = True, compute_uv = True)
+                     </code>
+                  </div>
+                  <div class="panel-body">
+                    <p>
+                        Функция <strong class="func">linalg.svd()</strong> выполняет сингулярное (SVD) разложение.
+                    </p>
+                    <p>
+                        Данное разложение позволяет представить матрицу <em>A</em> размером <em>(m, n)</em> в виде произведения \(A=U\Sigma V^{*}\), в котором матрица <em>U</em> состоит из левых сингулярных векторов (один из размеров будет равен <em>m</em>), а матрица <em>V</em> (один из размеров будет равен <em>n</em>) состоит из правых сингулярных векторов. Обе матрицы <em>U</em> и <em>V</em> - это ортогональные (унитарные для комплексных <em>A</em>) матрицы. \(V^{*}\) обозначает Транспонированную (или сопряженно транспонированная матрица для комплексных <em>A</em>). Матрица \(\Sigma\) - это диагональная матрица размером <em>(m, n)</em>, которая содержит сингулярные числа исходной матрицы <em>A</em>.
+                    </p>
+                    <dl>
+                      <dt class="options">Параметры:</dt>
+                      <dd>
+                          <dl class="param_list">
+                              <dt>a <span class="param">- массив NumPy или подобный массиву объект.</span></dt>
+                              <dd class="param_description">
+                                  Двумерный массив с формой <em>(N, M)</em>, который может состоять как из комплексных так и вещественных чисел. Это может быть и многомерный массив, но он будет обрабатываться относительно последних двух осей как массив матриц.
+                              </dd>
+                              
+                              <dt>full_matrices <span class="param">- <em>True</em> или <em>False</em> (необязательный параметр).</span></dt>
+                              <dd class="param_description">
+                                  Определяет форму выходных массивов <em>U</em> и \(V^{*}\). Если <em>True</em>, то форма <em>U</em> будет равна <em>(..., M, M)</em>, а форма \(V^{*}\) <em>(..., N, N)</em>. Если <em>False</em>, то форма <em>U</em> будет равна <em>(..., M, K)</em>, а форма \(V^{*}\) <em>(..., K, N)</em>, где <code class="par">K = min(M, N)</code>.
+                              </dd>
+                              
+                              <dt>compute_uv <span class="param">- <em>True</em> или <em>False</em> (необязательный параметр).</span></dt>
+                              <dd class="param_description">
+                                  Значение <em>True</em> означает, что будут вычислены все три матрицы \(U,\Sigma, V^{*}\), значение <em>False</em> - только \(\Sigma\).
+                              </dd>
+                          </dl>
+
+                      </dd>
+                      <dt class="options">Возвращает:</dt>
+                      <dd>
+                          <dl class="param_list">
+                              <dt>результат <span class="param">- кортеж из трех массивов NumPy</span></dt>
+                              <dd class="param_description">Первый массив в кортеже - это массив <em>U</em>, второй - массив \(\Sigma\), третий - \(V^{*}\). Если параметр <code class="par">compute_uv</code> равен <em>False</em> возвращается только \(\Sigma\). В случае если функции передавался многомерный массив, то длина всех осей выходных массивов, кроме двух последних, будут равны соответствующим осям входного массива. Длинна последних двух осей у массивов <em>U</em> и \(V^{*}\) зависит от параметра <code class="par">full_matrices</code>.</dd>
+                          </dl>
+                      </dd>
+                    </dl>
+                  </div>
+               </div>
+               
+               <h2>Замечание</h2>
+               <p>
+                    В случае невозможности разложения указанного массива, возникает исключение <em>LinAlgError</em>.
+               </p>
+               <p>
+                   Если на вход подан объект подкласса <em>matrix</em>, то возвращаются объекты этого же подкласса.
+               </p>
+
+               <div class="alert alert-success">
+                 <strong>Смотрите так же:</strong><br>
+                 <code class="par"><a href="linalg_cholesky.html" class="alert-link">cholesky</a></code>,
+                 <code class="par"><a href="linalg_qr.html" class="alert-link">qr</a></code>,
+                 <code class="par"><a href="linalg_norm.html" class="alert-link">norm</a></code>
+               </div>
+
+               
+               <hr>
+               
+               <h2>Примеры</h2>
+               <pre><code class="language-python">>>> import numpy as np
+>>> 
+>>> A = [[1, 0, 0, 0, 2],
+...      [0, 0, 3, 0, 0],
+...      [0, 0, 0, 0, 0],
+...      [0, 4, 0, 0, 0]]
+>>> 
+>>> np.linalg.svd(A)
+(array([[ 0.,  0.,  1.,  0.],
+        [ 0.,  1.,  0.,  0.],
+        [ 0.,  0.,  0., -1.],
+        [ 1.,  0.,  0.,  0.]]), 
+array([4.        , 3.        , 2.23606798, 0.        ]),
+array([[-0.        ,  1.        ,  0.        , -0.        ,  0.        ],
+       [-0.        ,  0.        ,  1.        , -0.        ,  0.        ],
+       [ 0.4472136 , -0.        , -0.        , -0.        ,  0.89442719],
+       [ 0.        ,  0.        ,  0.        ,  1.        ,  0.        ],
+       [-0.89442719,  0.        ,  0.        ,  0.        ,  0.4472136 ]]))
+>>> 
+>>> U, S, Vh = np.linalg.svd(A)
+>>> 
+>>> U
+array([[ 0.,  0.,  1.,  0.],
+       [ 0.,  1.,  0.,  0.],
+       [ 0.,  0.,  0., -1.],
+       [ 1.,  0.,  0.,  0.]])
+>>> 
+>>> S
+array([4.        , 3.        , 2.23606798, 0.        ])
+>>> 
+>>> Vh
+array([[-0.        ,  1.        ,  0.        , -0.        ,  0.        ],
+       [-0.        ,  0.        ,  1.        , -0.        ,  0.        ],
+       [ 0.4472136 , -0.        , -0.        , -0.        ,  0.89442719],
+       [ 0.        ,  0.        ,  0.        ,  1.        ,  0.        ],
+       [-0.89442719,  0.        ,  0.        ,  0.        ,  0.4472136 ]])
+>>> 
+>>> 
+>>> np.dot(U, U.T)
+array([[1., 0., 0., 0.],
+       [0., 1., 0., 0.],
+       [0., 0., 1., 0.],
+       [0., 0., 0., 1.]])
+>>> 
+>>> np.dot(Vh, Vh.T)
+array([[1.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+       [0.00000000e+00, 1.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+       [0.00000000e+00, 0.00000000e+00, 1.00000000e+00, 0.00000000e+00, 2.22044605e-16],
+       [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 1.00000000e+00, 0.00000000e+00],
+       [0.00000000e+00, 0.00000000e+00, 2.22044605e-16, 0.00000000e+00, 1.00000000e+00]])
+</code></pre>
+               
+               <p class="forum_links">
+                   <a rel="nofollow" href="https://ru.stackoverflow.com/" class="link_on_forum" title="Задать вопрос на Stack Overflow" target="_blank">
+                       <img class="img_in_text img_forum_links" src="../images/stack_overflow.jpg" alt="ru.stackoverflow">
+                   </a>
+                   <a rel="nofollow" href="https://toster.ru/" class="link_on_forum" title="Задать вопрос на Тостере" target="_blank">
+                       <img class="img_in_text img_forum_links" src="../images/toster.jpg" alt="toster">
+                   </a>
+                   <a rel="nofollow" href="http://python.su/forum/" class="link_on_forum" title="Задать вопрос на форуме python.su" target="_blank">
+                       <img class="img_in_text img_forum_links" src="../images/python_su_forum.jpg" alt="python_su_forum">
+                   </a>
+                   <a rel="nofollow" href="http://www.cyberforum.ru/" class="link_on_forum" title="Задать вопрос на CyberForum" target="_blank">
+                       <img class="img_in_text img_forum_links" src="../images/cyberforum.jpg" alt="cyberforum">
+                   </a>
+               </p>
+               
+               <!-- Yandex.RTB R-A-413294-6 -->
+                   <div class="adapt_rek">
+                    <div id="yandex_rtb_R-A-413294-6"></div>
+                    <script type="text/javascript">
+                        (function(w, d, n, s, t) {
+                            w[n] = w[n] || [];
+                            w[n].push(function() {
+                                Ya.Context.AdvManager.render({
+                                    blockId: "R-A-413294-6",
+                                    renderTo: "yandex_rtb_R-A-413294-6",
+                                    async: true
+                                });
+                            });
+                            t = d.getElementsByTagName("script")[0];
+                            s = d.createElement("script");
+                            s.type = "text/javascript";
+                            s.src = "//an.yandex.ru/system/context.js";
+                            s.async = true;
+                            t.parentNode.insertBefore(s, t);
+                        })(this, this.document, "yandexContextAsyncCallbacks");
+                    </script>
+                   </div>
+           </div>
+           
+           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+             
+              <!-- menu -->
+              <div class="hidden-sm hidden-xs">
+              
+              <hr class="hr_menu sm_bottom">
+              
+               <ul class="menu_l0_map">
+                   <li><a href="https://pyprog.pro/">PyProg</a>
+                       <ul class="menu_l1_map">
+                           <li class="li_in_menu"><a href="../reference_manual.html">NumPy справочное руководство</a>
+                               <ul class="menu_l2_map">
+                                   <li class="li_in_menu">
+                                       <a class="bad_a_in_li" href="linalg_functions.html">Линейная алгебра</a>
+                                       <ul class="menu_l3_map">
+                                           <li class="li_in_menu">
+                                               <a class="bad_a_in_li" href="#">linalg.svd()</a>
+                                           </li>
+                                       </ul>
+                                   </li>
+                               </ul>
+                           </li>
+                       </ul>
+                   </li>
+               </ul>
+               
+               <hr class="hr_menu sm_margin">
+               
+               <p class="p_link_next">
+                   &#8594; <a href="linalg_norm.html">linalg.norm()</a><br>
+                   &#8592; <a href="linalg_qr.html">linalg.qr()</a>
+               </p>
+               
+               <hr class="hr_menu lg_margin">
+               
+                <ul class="menu_l0">
+                   <li><a href="../reference_manual.html">NumPy справочное руководство</a>
+                       <ul class="menu_l1">
+                           <li>
+                               <a href="../array_creation/array_creation_functions.html">Создание массивов</a>
+                           </li>
+                           <li>
+                               <a href="../array_manipulation/array_manipulation_functions.html">Операции над массивами</a>
+                           </li>
+                           <li>
+                               <a href="../mathematical_functions/mathematical_functions.html">Математические функции</a>
+                           </li>
+                           <li>
+                               <a href="../random_sampling_functions/random_sampling_functions.html">Генерация случайных данных</a>
+                           </li>
+                           <li>
+                               <a href="../statistics_functions/statistics_function.html">Статистика</a>
+                           </li>
+                           <li>
+                               <a href="linalg_functions.html">Линейная алгебра</a>
+                               <ul class="menu_l2">
+                                    <li><a href="linalg_functions.html#linalg_functions_ch1">Произведение векторов и матриц</a></li>
+                                    <li><a href="linalg_functions.html#linalg_functions_ch2">Разложения матриц</a></li>
+                                    <li><a href="linalg_functions.html#linalg_functions_ch3">Нормы и прочие числовые характеристики матриц</a></li>
+                                    <li><a href="linalg_functions.html#linalg_functions_ch4">Собственные значения матриц</a></li>
+                                    <li><a href="linalg_functions.html#linalg_functions_ch5">Системы уравнений и обратные матрицы</a></li>
+                                    <li><a href="linalg_functions.html#linalg_functions_ch6">Исключения</a></li>
+                               </ul>
+                           </li>
+                           <li>
+                               <a href="../io_functions/io_functions.html">Ввод вывод данных</a>
+                           </li>
+                           <li>
+                               <a href="../indexing_routines/indexing_routines.html">Работа с индексом</a>
+                           </li>
+                           <li>
+                               <a href="../sort/sort_func.html">Сортировка, поиск, подсчет</a>
+                           </li>
+                       </ul>
+                   </li>
+                </ul>
+                
+                <hr class="hr_menu">
+                
+                <ul class="menu_l0">
+                   <li><a href="../short_guide.html">NumPy краткое руководство</a>
+                       <ul class="menu_l1">
+                           <li><a href="../why_numpy.html">NumPy</a></li>
+                           <li><a href="../installing_numpy.html">Установка</a></li>
+                           <li><a href="../introduction.html">Массивы NumPy</a></li>
+                           <li><a href="../array_creation.html">Создание массивов</a></li>
+                           <li><a href="../printing_arrays.html">Вывод массивов на экран</a></li>
+                           <li><a href="../file_input_and_output.html">Файловый ввод и вывод массивов</a></li>
+                           <li><a href="../basic_operations.html">Математика в NumPy</a></li>
+                           <li><a href="../index_section_iteration.html">Индексация, срезы, итерирование</a></li>
+                           <li><a href="../shape_manipulation.html">Манипулирование формой массивов</a></li>
+                           <li><a href="../copies_and_views.html">Копии и представления массивов</a></li>
+                           <li><a href="../broadcasting.html">Транслирование массивов</a></li>
+                           <li><a href="../data_types.html">Типы данных</a></li>
+                           <li><a href="../structured_arrays.html">Структурированные массивы</a></li>
+                       </ul>
+                   </li>
+                </ul>
+                
+                <hr class="hr_menu">
+              </div>
+              <!-- end menu -->
+              
+              <div class="sticky-block">
+                <div class="inner">
+                        <!-- Yandex.RTB R-A-413294-23 -->
+                        <div id="yandex_rtb_R-A-413294-23"></div>
+                        <script type="text/javascript">
+                            (function(w, d, n, s, t) {
+                                w[n] = w[n] || [];
+                                w[n].push(function() {
+                                    Ya.Context.AdvManager.render({
+                                        blockId: "R-A-413294-23",
+                                        renderTo: "yandex_rtb_R-A-413294-23",
+                                        async: true
+                                    });
+                                });
+                                t = d.getElementsByTagName("script")[0];
+                                s = d.createElement("script");
+                                s.type = "text/javascript";
+                                s.src = "//an.yandex.ru/system/context.js";
+                                s.async = true;
+                                t.parentNode.insertBefore(s, t);
+                            })(this, this.document, "yandexContextAsyncCallbacks");
+                        </script>
+                </div>
+              </div>
+           </div>
+           
+       </div>
+      </div>
+    </div>
+      <div class="footer">
+                <div class="informer">
+                        <!-- Yandex.Metrika informer -->
+                        <a href="https://metrika.yandex.ru/stat/?id=48843035&amp;from=informer"
+                        target="_blank" rel="nofollow"><img src="https://informer.yandex.ru/informer/48843035/3_0_202020FF_000000FF_1_pageviews"
+                        style="width:88px; height:31px; border:0;" alt="Яндекс.Метрика" title="Яндекс.Метрика: данные за сегодня (просмотры, визиты и уникальные посетители)" class="ym-advanced-informer" data-cid="48843035" data-lang="ru" /></a>
+                        <!-- /Yandex.Metrika informer -->
+                </div>
+                <div class="copyrighted">
+                     <p class="author">
+                       &#169; <a class="author-page" href="../about_the_author.html" title="Об авторе">Семён Лукашевский</a>, 2018-2020
+                     </p>
+                </div>
+
+
+      </div>
+
+
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/fixads.js"></script>
+    <script src="../js/prism.js"></script>
+  </body>
+</html>
